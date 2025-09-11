@@ -37,5 +37,6 @@ jobs:
           OPENAI_API_BASE: ${{ secrets.OPENAI_API_BASE }}
           MODEL_NAME: ${{ secrets.MODEL_NAME }}
           LANGUAGE: ${{ vars.LANGUAGE }}
+          LLM_RETRY: ${{ vars.LLM_RETRY }}
         run: |
           uv run main.py

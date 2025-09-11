@@ -141,6 +141,12 @@ if __name__ == '__main__':
         help="Language of TLDR",
         default="English",
     )
+    add_argument(
+        "--llm_retry",
+        type=int,
+        help="Number of LLM retry attempts with exponential backoff",
+        default=5,
+    )
     parser.add_argument('--debug', action='store_true', help='Debug mode')
     args = parser.parse_args()
     assert (
@@ -174,10 +180,10 @@ if __name__ == '__main__':
             papers = papers[:args.max_paper_num]
         if args.use_llm_api:
             logger.info("Using OpenAI API as global LLM.")
-            set_global_llm(api_key=args.openai_api_key, base_url=args.openai_api_base, model=args.model_name, lang=args.language)
+            set_global_llm(api_key=args.openai_api_key, base_url=args.openai_api_base, model=args.model_name, lang=args.language, max_retries=args.llm_retry)
         else:
             logger.info("Using Local LLM as global LLM.")
-            set_global_llm(lang=args.language)
+            set_global_llm(lang=args.language, max_retries=args.llm_retry)
 
     html = render_email(papers)
     logger.info("Sending email...")
