@@ -16,6 +16,10 @@ logs
 models
 test-compose.yml
 
-# Test files
+# Test and documentation files (temporary)
 test_llm_fallback.py
 verify_changes.py
+example_usage.py
+validate_implementation.py
+FALLBACK_FEATURE.md
+README_FALLBACK.md
