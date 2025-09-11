@@ -15,3 +15,7 @@ test.ipynb
 logs
 models
 test-compose.yml
+
+# Test files
+test_llm_fallback.py
+verify_changes.py
