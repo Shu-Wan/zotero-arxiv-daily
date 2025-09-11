@@ -6,7 +6,7 @@ from time import sleep
 GLOBAL_LLM = None
 
 class LLM:
-    def __init__(self, api_key: str = None, base_url: str = None, model: str = None,lang: str = "English"):
+    def __init__(self, api_key: str = None, base_url: str = None, model: str = None, lang: str = "English", max_retries: int = 5):
         if api_key:
             self.llm = OpenAI(api_key=api_key, base_url=base_url)
         else:
@@ -19,27 +19,39 @@ class LLM:
             )
         self.model = model
         self.lang = lang
+        self.max_retries = max_retries
 
     def generate(self, messages: list[dict]) -> str:
         if isinstance(self.llm, OpenAI):
-            max_retries = 3
-            for attempt in range(max_retries):
+            for attempt in range(self.max_retries):
                 try:
                     response = self.llm.chat.completions.create(messages=messages, temperature=0, model=self.model)
-                    break
+                    return response.choices[0].message.content
                 except Exception as e:
-                    logger.error(f"Attempt {attempt + 1} failed: {e}")
-                    if attempt == max_retries - 1:
+                    logger.error(f"OpenAI API attempt {attempt + 1} failed: {e}")
+                    if attempt == self.max_retries - 1:
                         raise
-                    sleep(3)
-            return response.choices[0].message.content
+                    # Exponential backoff: 1, 2, 4, 8, 16 seconds
+                    delay = 2 ** attempt
+                    logger.info(f"Retrying in {delay} seconds...")
+                    sleep(delay)
         else:
-            response = self.llm.create_chat_completion(messages=messages,temperature=0)
-            return response["choices"][0]["message"]["content"]
+            for attempt in range(self.max_retries):
+                try:
+                    response = self.llm.create_chat_completion(messages=messages, temperature=0)
+                    return response["choices"][0]["message"]["content"]
+                except Exception as e:
+                    logger.error(f"Local LLM attempt {attempt + 1} failed: {e}")
+                    if attempt == self.max_retries - 1:
+                        raise
+                    # Exponential backoff: 1, 2, 4, 8, 16 seconds
+                    delay = 2 ** attempt
+                    logger.info(f"Retrying in {delay} seconds...")
+                    sleep(delay)
 
-def set_global_llm(api_key: str = None, base_url: str = None, model: str = None, lang: str = "English"):
+def set_global_llm(api_key: str = None, base_url: str = None, model: str = None, lang: str = "English", max_retries: int = 5):
     global GLOBAL_LLM
-    GLOBAL_LLM = LLM(api_key=api_key, base_url=base_url, model=model, lang=lang)
+    GLOBAL_LLM = LLM(api_key=api_key, base_url=base_url, model=model, lang=lang, max_retries=max_retries)
 
 def get_llm() -> LLM:
     if GLOBAL_LLM is None:
