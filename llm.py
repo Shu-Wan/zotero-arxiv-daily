@@ -28,7 +28,7 @@ class LLM:
                     response = self.llm.chat.completions.create(messages=messages, temperature=0, model=self.model)
                     return response.choices[0].message.content
                 except Exception as e:
-                    logger.error(f"OpenAI API attempt {attempt + 1} failed: {e}")
+                    logger.error(f"Attempt {attempt + 1} failed: {e}")
                     if attempt == self.max_retries - 1:
                         raise
                     # Exponential backoff: 1, 2, 4, 8, 16 seconds
@@ -36,18 +36,8 @@ class LLM:
                     logger.info(f"Retrying in {delay} seconds...")
                     sleep(delay)
         else:
-            for attempt in range(self.max_retries):
-                try:
-                    response = self.llm.create_chat_completion(messages=messages, temperature=0)
-                    return response["choices"][0]["message"]["content"]
-                except Exception as e:
-                    logger.error(f"Local LLM attempt {attempt + 1} failed: {e}")
-                    if attempt == self.max_retries - 1:
-                        raise
-                    # Exponential backoff: 1, 2, 4, 8, 16 seconds
-                    delay = 2 ** attempt
-                    logger.info(f"Retrying in {delay} seconds...")
-                    sleep(delay)
+            response = self.llm.create_chat_completion(messages=messages, temperature=0)
+            return response["choices"][0]["message"]["content"]
 
 def set_global_llm(api_key: str = None, base_url: str = None, model: str = None, lang: str = "English", max_retries: int = 5):
     global GLOBAL_LLM
