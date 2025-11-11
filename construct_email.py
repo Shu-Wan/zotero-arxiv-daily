@@ -140,7 +140,11 @@ def render_email(papers:list[ArxivPaper]):
                 affiliations += ', ...'
         else:
             affiliations = 'Unknown Affiliation'
-        parts.append(get_block_html(p.title, authors,rate,p.arxiv_id ,p.tldr, p.pdf_url, p.code_url, affiliations))
+        
+        # Use arxiv abstract page as fallback if pdf_url is not available
+        pdf_url = p.pdf_url if p.pdf_url is not None else f"https://arxiv.org/abs/{p.arxiv_id}"
+        
+        parts.append(get_block_html(p.title, authors,rate,p.arxiv_id ,p.tldr, pdf_url, p.code_url, affiliations))
         time.sleep(10)
 
     content = '<br>' + '</br><br>'.join(parts) + '</br>'
