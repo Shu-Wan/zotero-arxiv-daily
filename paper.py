@@ -66,6 +66,11 @@ class ArxivPaper:
     
     @cached_property
     def tex(self) -> dict[str,str]:
+        # Check if pdf_url exists before attempting to download source
+        if self._paper.pdf_url is None:
+            logger.warning(f"PDF URL for {self.arxiv_id} is None. Skipping source analysis.")
+            return None
+        
         with ExitStack() as stack:
             tmpdirname = stack.enter_context(TemporaryDirectory())
             # file = self._paper.download_source(dirpath=tmpdirname)
