@@ -67,6 +67,10 @@ class ArxivPaper:
     @cached_property
     def tex(self) -> dict[str,str]:
         # Check if pdf_url exists before attempting to download source
+        # pdf_url can be None when the arxiv API response doesn't include a link with title="pdf"
+        # This can happen for withdrawn papers, papers with special status, or due to API issues
+        # The arxiv library's download_source() method will fail with AttributeError if pdf_url is None
+        # because it tries to call pdf_url.replace() without checking for None first
         if self._paper.pdf_url is None:
             logger.warning(f"PDF URL for {self.arxiv_id} is None. Skipping source analysis.")
             return None

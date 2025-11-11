@@ -142,6 +142,8 @@ def render_email(papers:list[ArxivPaper]):
             affiliations = 'Unknown Affiliation'
         
         # Use arxiv abstract page as fallback if pdf_url is not available
+        # pdf_url can be None for withdrawn papers, papers with special status, or due to API issues
+        # In such cases, we still want to provide a valid link to the paper's abstract page
         pdf_url = p.pdf_url if p.pdf_url is not None else f"https://arxiv.org/abs/{p.arxiv_id}"
         
         parts.append(get_block_html(p.title, authors,rate,p.arxiv_id ,p.tldr, pdf_url, p.code_url, affiliations))
