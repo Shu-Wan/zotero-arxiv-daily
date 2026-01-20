@@ -147,7 +147,7 @@ if __name__ == '__main__':
         "--model_name",
         type=str,
         help="LLM Model Name",
-        default="gemini-2.0-flash-exp",
+        default="gemini-2.0-flash",
     )
     add_argument(
         "--language",
