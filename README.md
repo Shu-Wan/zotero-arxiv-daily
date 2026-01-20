@@ -66,8 +66,8 @@ Below are all the secrets you need to set. They are invisible to anyone includin
 | MAX_PAPER_NUM | | int | The maximum number of the papers presented in the email. This value directly affects the execution time of this workflow, because it takes about 70s to generate TL;DR for one paper. `-1` means to present all the papers retrieved. | 50 |
 | SEND_EMPTY | | bool | Whether to send an empty email even if no new papers today. | False |
 | USE_LLM_API | | bool | Whether to use the LLM API in the cloud or to use local LLM. If set to `1`, the API is used. Else if set to `0`, the workflow will download and deploy an open-source LLM. Default to `0`. | 0 |
-| OPENAI_API_KEY | | str | API Key when using the API to access LLMs. You can get FREE API for using advanced open source LLMs in [SiliconFlow](https://cloud.siliconflow.cn/i/b3XhBRAm). | sk-xxx |
-| OPENAI_API_BASE | | str | API URL when using the API to access LLMs. If not filled in, the default is the OpenAI URL. | https://api.siliconflow.cn/v1 |
+| OPENAI_API_KEY | | str | API Key when using the API to access LLMs. For Gemini models, use a Google AI Studio API key. You can also get FREE API for using advanced open source LLMs in [SiliconFlow](https://cloud.siliconflow.cn/i/b3XhBRAm). | sk-xxx |
+| OPENAI_API_BASE | | str | API URL when using the API to access LLMs. If not filled in, the default is the Google AI Studio URL for Gemini models. | https://generativelanguage.googleapis.com/v1beta |
 | MODEL_NAME | | str | Model name when using the API to access LLMs. If not filled in, the default is gemini-2.0-flash-exp. Qwen/Qwen2.5-7B-Instruct is recommended when using [SiliconFlow](https://cloud.siliconflow.cn/i/b3XhBRAm). | Qwen/Qwen2.5-7B-Instruct |
 
 There are also some public variables (Repository Variables) you can set, which are easy to edit.
