@@ -141,7 +141,7 @@ if __name__ == '__main__':
         "--openai_api_base",
         type=str,
         help="OpenAI API base URL",
-        default="https://api.openai.com/v1",
+        default="https://generativelanguage.googleapis.com/v1beta",
     )
     add_argument(
         "--model_name",
